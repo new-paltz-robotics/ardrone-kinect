@@ -1,4 +1,13 @@
+import com.shigeodayo.ardrone.manager.*;
+import com.shigeodayo.ardrone.navdata.*;
+import com.shigeodayo.ardrone.utils.*;
+import com.shigeodayo.ardrone.processing.*;
+import com.shigeodayo.ardrone.command.*;
+import com.shigeodayo.ardrone.*;
+
 import SimpleOpenNI.*;
+
+ARDroneForP5 ardrone;
  
 SimpleOpenNI  context;
 int togDraw = 0;
@@ -26,7 +35,19 @@ void setup()
   
  
   // create a window the size of the depth information
- size(context.depthWidth() + context.rgbWidth() + 10, context.rgbHeight()); 
+ size(context.depthWidth() + context.rgbWidth() + 10, context.rgbHeight());
+
+
+  ardrone=new ARDroneForP5("192.168.1.1");
+  //AR.Droneに接続，操縦するために必要
+  ardrone.connect();
+  //AR.Droneからのセンサ情報を取得するために必要
+  ardrone.connectNav();
+  //AR.Droneからの画像情報を取得するために必要
+  ardrone.connectVideo();
+  //これを宣言すると上でconnectした3つが使えるようになる．
+  ardrone.start();
+  
 }
  
 void draw()
@@ -125,10 +146,12 @@ void handDist(int userId)
    {
      togDraw = 1;
      reset = 0;
+      ardrone.takeOff();
    }else if (togDraw == 1 && reset == 1)
    {
      togDraw = 0;
      reset = 0;
+     ardrone.landing();
    }
 
     
