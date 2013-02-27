@@ -1,5 +1,14 @@
 import processing.opengl.*;
 
+import com.shigeodayo.ardrone.manager.*;
+import com.shigeodayo.ardrone.navdata.*;
+import com.shigeodayo.ardrone.utils.*;
+import com.shigeodayo.ardrone.processing.*;
+import com.shigeodayo.ardrone.command.*;
+import com.shigeodayo.ardrone.*;
+
+
+ARDroneForP5 ardrone;
 
 
 import SimpleOpenNI.*;
@@ -43,6 +52,17 @@ void setup()
   bottomTex = loadImage("bottomtexture.png");
   textureMode(NORMAL);
 
+ 
+  ardrone=new ARDroneForP5("192.168.1.1");
+  //AR.Droneに接続，操縦するために必要
+  ardrone.connect();
+  //AR.Droneからのセンサ情報を取得するために必要
+  //ardrone.connectNav();
+  //AR.Droneからの画像情報を取得するために必要
+  //ardrone.connectVideo();
+  //これを宣言すると上でconnectした3つが使えるようになる．
+  ardrone.start();
+  //ardrone.landing();
  
   // create a window the size of the depth information
 // size(context.depthWidth() + context.rgbWidth() + 10, context.rgbHeight(), OPENGL); 
@@ -132,22 +152,28 @@ void angleThreshold()
     if (angle < -54)
   {
     angleString = "Sharp Right";
+    ardrone.goRight();
   }  
     if (angle < -18 && angle > -54)
   {
     angleString = "Right";
+    ardrone.goRight();
+    
   }  
   if (angle > -18 && angle < 18)
   {
     angleString = "Level";
+    
   }  
   if (angle > 18 && angle < 54)
   {
     angleString = "Left";
+    ardrone.goLeft();
   }
     if (angle > 54)
   {
     angleString = "Sharp Left";
+    ardrone.goLeft();
   }
 
 }
@@ -172,15 +198,31 @@ void handDist(int userId)
   if (len < 300)
   {
 //   print (len);
-   println ("close");
+   //println ("close");
    if (togDraw == 0 && reset == 1)
    {
      togDraw = 1;
      reset = 0;
-   }else if (togDraw == 1 && reset == 1)
+     //if (ardrone.connect()) {
+     //  ardrone.start();
+       ardrone.takeOff();
+       print("TAKEOFF");
+     //}
+     //else {
+     //  print("CONNECT FAIL");
+    // }
+   }
+   else if (togDraw == 1 && reset == 1)
    {
      togDraw = 0;
      reset = 0;
+     //if (ardrone.connect()) {
+       ardrone.takeOff();
+       print("LANDING");
+     //}
+     //else {
+     //  print("CONNECT FAIL (LANDING)");
+     //}
    }
 
     
@@ -265,14 +307,23 @@ void circleForAHead(int userId)
  
    float hipHandz =  (((jointPosLeftHip.z - jointPos_Proj.z) - 250)+((jointPosRightHip.z - jointPos_Proj2.z) - 250))/2;
     hipHandz = (hipHandz/700)*90;
+   
+   if (hipHandz > 18) {
+     ardrone.forward();
+   }
+   if (hipHandz < -18) {
+     ardrone.backward();
+   }
+   
   
 
 
 ////////yaw
 
  float yawHandZ = jointPos_Proj.z - jointPos_Proj2.z;
-  println(yawHandZ);
+  //println(yawHandZ);
   yawHandZ = (yawHandZ/600)*90;
+  
  pushMatrix();
  float midX = (jointPos_Proj.x + jointPos_Proj2.x)/2;
  float midY = (jointPos_Proj.y + jointPos_Proj2.y)/2;

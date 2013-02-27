@@ -47,7 +47,7 @@ void setup()
   ardrone.connectVideo();
   //これを宣言すると上でconnectした3つが使えるようになる．
   ardrone.start();
-  
+  ardrone.landing();
 }
  
 void draw()
@@ -105,14 +105,17 @@ void angleThreshold()
     if (angle < -18 && angle > -54)
   {
     angleString = "Right";
+     ardrone.goRight();
   }  
   if (angle > -18 && angle < 18)
   {
     angleString = "Level";
+    ardrone.stop();
   }  
   if (angle > 18 && angle < 54)
   {
     angleString = "Left";
+     ardrone.goLeft();
   }
     if (angle > 54)
   {
@@ -121,6 +124,15 @@ void angleThreshold()
 
 }
 // draws a circle at the position of the head
+
+void keyPressed(){
+  if(key==CODED && keyCode==SHIFT) {
+    //AR.Droneに接続，操縦するために必要
+    
+  } 
+}
+
+
 void handDist(int userId)
 {
   PVector jointPosLeft = new PVector();
@@ -146,7 +158,7 @@ void handDist(int userId)
    {
      togDraw = 1;
      reset = 0;
-      ardrone.takeOff();
+     ardrone.takeOff();
    }else if (togDraw == 1 && reset == 1)
    {
      togDraw = 0;
