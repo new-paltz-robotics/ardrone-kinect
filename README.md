@@ -11,3 +11,4 @@ Dependencies
 * SimpleOpenNI Processing library for Kinect - http://code.google.com/p/simple-openni/wiki/Installation
 * AR Drone Processing Libraries - https://github.com/shigeodayo/ARDroneForP5 
 Documentation is at http://kougaku-navi.net/ARDroneForP5/index_en.html#library
+* IMPORTANT NOTE: The newest version (Feb 2013) of the ARDroneForP5 library supports ARDrone 2.0, which our club is now using. The downloads mentioned in https://github.com/shigeodayo/ARDroneForP5#requirements have already been added to the code here, but you may need to re-add them (or symlink the code folder) if you are creating a new file/folder.
