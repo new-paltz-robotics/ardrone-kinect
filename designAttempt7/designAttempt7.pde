@@ -7,7 +7,7 @@ import SimpleOpenNI.*;
 SimpleOpenNI  context;
 int togDraw = 0;
 int reset = 1;
-float angle = 0;
+float angle = 0;    //roll
 String heightString = "";
 String angleString = "";
 float dy = 0;
@@ -22,11 +22,19 @@ PImage lengthTex;
 PImage bottomTex;
 PImage animation;
 float battery = 0;
+float hipHandz = 0;      //pitch
+float yawHandZ = 0;
+float rotYaw = 0;
+float rotPitch = 0;
+float rotRoll = 0;
 
 int numFrames = 11;  // The number of frames in the animation
 int frame = 0;
 PImage[] images = new PImage[numFrames];
 
+int numFramesCube = 4;
+int frameCube = 0;
+PImage[] cubeimages = new PImage[numFramesCube];
 void setup()
 {
   // instantiate a new context
@@ -49,6 +57,13 @@ void setup()
   lengthTex = loadImage("lengthtexture.png");
   bottomTex = loadImage("bottomtexture.png");
   animation = loadImage("1357086152224.gif");
+  cubeimages[0] = loadImage("2cubefaceAni0.png");
+  cubeimages[1] = loadImage("2cubefaceAni1.png");
+  cubeimages[2] = loadImage("2cubefaceAni2.png");
+  cubeimages[3] = loadImage("2cubefaceAni3.png");
+//  cubeimages[4] = loadImage("cubefaceAni4.png");
+
+  
   
     images[0]  = loadImage("PT_anim0000.png");
   images[1]  = loadImage("PT_anim0001.png"); 
@@ -185,7 +200,7 @@ void handDist(int userId)
    {
      togDraw = 0;
      reset = 0;
-     println (jointPosRight.y - jointPosRightHip.y);
+    
      if (jointPosRight.y - jointPosRightHip.y > 100)
      {
       context.stopTrackingSkeleton(userId); 
@@ -273,15 +288,15 @@ void circleForAHead(int userId)
   context.getJointPositionSkeleton(userId,SimpleOpenNI.SKEL_LEFT_HIP,jointPosLeftHip);
   context.getJointPositionSkeleton(userId,SimpleOpenNI.SKEL_RIGHT_HIP,jointPosRightHip);
  
-   float hipHandz =  (((jointPosLeftHip.z - jointPos_Proj.z) - 250)+((jointPosRightHip.z - jointPos_Proj2.z) - 250))/2;
+    hipHandz =  (((jointPosLeftHip.z - jointPos_Proj.z) - 250)+((jointPosRightHip.z - jointPos_Proj2.z) - 250))/2;
     hipHandz = (hipHandz/700)*90;
   
 
 
 ////////yaw
 
- float yawHandZ = jointPos_Proj.z - jointPos_Proj2.z;
-  println(yawHandZ);
+  yawHandZ = jointPos_Proj.z - jointPos_Proj2.z;
+  
   yawHandZ = (yawHandZ/600)*90;
  pushMatrix();
  float midX = (jointPos_Proj.x + jointPos_Proj2.x)/2;
@@ -295,6 +310,17 @@ rotateZ(radians(-angle));
 
 
   rotateX(radians(hipHandz));       // not sure if it should be inverted
+  dy = dy+150;
+  dy = (dy/400)*90;
+  if (dy > 90)
+ {
+  dy = 90;
+ } 
+ if (dy < -90)
+ {
+  dy = -90; 
+ }
+  println(dy);
 
 drawDrone();
 
@@ -443,10 +469,38 @@ void drawDrone() {
     endShape();
     popMatrix();
   }
-    
-    popMatrix();
+  
+      popMatrix();
     translate(0,-10,-50);
-      fill(95, 158, 160, 100);
+      
+  
+  
+    for(int i = 0; i < 4; i++)
+  {
+    
+fill(95, 158, 160, 100);
+    
+            if (i ==  0)
+  {
+    translate(-45, 0, 0);
+    
+  }
+      
+            if (i ==  1)
+  {
+    translate(90, 0, 20);
+    scale(.75);
+  }
+              if (i ==  2)
+  {
+    translate(-30, 0, -40);
+    
+  }
+                if (i ==  3)
+  {
+    translate(-30, 0, 40);
+    
+  }
     cylinder(20, 10, 16);
     fill(255, 255, 255, 150);
     cylinder(5, 3, 16);
@@ -467,20 +521,96 @@ void drawDrone() {
     {
       battery = 0;
     }
-    drawBattery();
-    popMatrix();
+    rotYaw = rotYaw + (yawHandZ/240);
+
+    rotPitch = rotPitch + (hipHandz/240);
+    rotRoll = rotRoll + (angle/240);
+
+  //  stroke(255);
+   
+ 
+  if (i == 0)
+  {
+    
+    
+    drawControlCube();
   }
-  
+   if (i == 1)
+  {
+    
+    
+    drawBattery();
+  }
+    
+    popMatrix();
+    
+  }
+  }
   
  
 }
 
+void drawControlCube()
+{
+  pushMatrix();
+      rotateY(rotYaw);
+
+    rotateX(rotPitch);
+    rotateY(rotRoll);
+    fill(255, 0, 0);
+  scale(20);
+                           beginShape(QUADS); // bottom
+                      
+                      frameCube = (frameCube+1) % (numFramesCube*10);
+           
+  texture(cubeimages[frameCube/10]);
+
+  vertex(-1, -1,  1, 0, 0);
+  vertex( 1, -1,  1, 1, 0);
+  vertex( 1,  1,  1, 1, 1);
+  vertex(-1,  1,  1, 0, 1);
+
+  // -Z "back" face
+  vertex( 1, -1, -1, 0, 0);
+  vertex(-1, -1, -1, 1, 0);
+  vertex(-1,  1, -1, 1, 1);
+  vertex( 1,  1, -1, 0, 1);
+
+  // +Y "bottom" face
+  vertex(-1,  1,  1, 0, 0);
+  vertex( 1,  1,  1, 1, 0);
+  vertex( 1,  1, -1, 1, 1);
+  vertex(-1,  1, -1, 0, 1);
+
+  // -Y "top" face
+  vertex(-1, -1, -1, 0, 0);
+  vertex( 1, -1, -1, 1, 0);
+  vertex( 1, -1,  1, 1, 1);
+  vertex(-1, -1,  1, 0, 1);
+
+  // +X "right" face
+  vertex( 1, -1,  1, 0, 0);
+  vertex( 1, -1, -1, 1, 0);
+  vertex( 1,  1, -1, 1, 1);
+  vertex( 1,  1,  1, 0, 1);
+
+  // -X "left" face
+  vertex(-1, -1, -1, 0, 0);
+  vertex(-1, -1,  1, 1, 0);
+  vertex(-1,  1,  1, 1, 1);
+  vertex(-1,  1, -1, 0, 1);
+
+  endShape();
+    endShape();
+    popMatrix();
+}
+
 void drawBattery()
 {
-  
- 
- 
  pushMatrix();
+ 
+ 
+ 
  rotateY(rot);
  
  translate(0,10,0);
@@ -493,10 +623,10 @@ void drawBattery()
  cylinder(3, 5, 16);
  popMatrix();
  fill(95, 158, 160, 200);
- print ("WWWWWWWWW");
+ 
  
 int empty = (int)(20-(20*(battery/100)));
- println(empty);
+ 
   cylinder(7, empty, 16);
   translate(0,empty,0);
    fill(255-((battery/100)*255),(battery/100)*255, 0, 150);
