@@ -1,10 +1,18 @@
 import processing.opengl.*;
 
+import com.shigeodayo.ardrone.manager.*;
+import com.shigeodayo.ardrone.navdata.*;
+import com.shigeodayo.ardrone.utils.*;
+import com.shigeodayo.ardrone.processing.*;
+import com.shigeodayo.ardrone.command.*;
+import com.shigeodayo.ardrone.*;
 
+ARDroneForP5 ardrone;
 
 import SimpleOpenNI.*;
  
 SimpleOpenNI  context;
+
 int togDraw = 0;
 int reset = 1;
 float angle = 0;    //roll
@@ -81,7 +89,15 @@ void setup()
   
   textureMode(NORMAL);
   
-  
+  ardrone=new ARDroneForP5("192.168.1.1");
+  //AR.Droneに接続，操縦するために必要
+  ardrone.connect();
+  //AR.Droneからのセンサ情報を取得するために必要
+  ardrone.connectNav();
+  //AR.Droneからの画像情報を取得するために必要
+  ardrone.connectVideo();
+  //これを宣言すると上でconnectした3つが使えるようになる．
+  ardrone.start();
 
  
   // create a window the size of the depth information
@@ -196,10 +212,12 @@ void handDist(int userId)
    {
      togDraw = 1;
      reset = 0;
+     ardrone.takeOff();
    }else if (togDraw == 1 && reset == 1)
    {
      togDraw = 0;
      reset = 0;
+     ardrone.landing();
     
      if (jointPosRight.y - jointPosRightHip.y > 100)
      {
@@ -324,9 +342,29 @@ rotateZ(radians(-angle));
 
 drawDrone();
 
-
 popMatrix();
 
+
+// This is where the Ardrone instructions will go. -FC
+
+// all are -90 to +90 (approx)
+// dy = height
+// yawHandZ = yaw
+// hipHandz = forward (and back)
+// angle = move left (and right)
+
+ARmoveDown = s(0 - dy) //fix direction
+ARmoveLeft = s(angle) //temp set to zero
+ARturnLeft = 0 //temp set to zero
+ARmoveForward = s(hipHandz)
+
+// Scales based on 90 deg = 10 
+function s(angle) {
+  return angle / 9;
+}
+
+if (togDraw == 1) {
+    ardrone.move3D(ARmoveForward, ARmoveLeft, ARmoveDown, ARturnLeft);
 }
  
 // draw the skeleton with the selected joints
