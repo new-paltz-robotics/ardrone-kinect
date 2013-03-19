@@ -138,11 +138,11 @@ void draw()
   }
   else if (togDraw == 1)
   {
-      fill(0, 255, 0);
-      text("angle: " + (int)(angle),450,16);  
-      text("height threshold: " + heightString,450,32);    
-      text("average height: " + (int)(dy),450,48);       
-      text("angle Threshold: " + angleString,450,64);  
+      fill(0, 0, 0, 255);
+      text("roll: " + (int)(angle),450,16);  
+      text("pitch: " + (int)(hipHandz),450,32);    
+      text("yaw: " + (int)(yawHandZ),450,48);       
+      text("height: " + (int)(dy),450,64);  
 
   }
        
@@ -154,6 +154,7 @@ void draw()
 
 rot = rot + .005;
   }
+
 
 }
 
@@ -219,15 +220,22 @@ void handDist(int userId)
      reset = 0;
      ardrone.landing();
     
-     if (jointPosRight.y - jointPosRightHip.y > 100)
-     {
-      context.stopTrackingSkeleton(userId); 
-      
-     }
+
    }
 
     
   }
+  if (keyPressed) {
+  if (key == 'l'){
+
+      context.stopTrackingSkeleton(userId); 
+      context.startPoseDetection("Psi",userId);
+  }
+  if (key == 'P'){
+    //kill command
+  }
+  
+}
 
   // print ("y");
    angle =(dy/len)*90; 
@@ -315,7 +323,7 @@ void circleForAHead(int userId)
 
   yawHandZ = jointPos_Proj.z - jointPos_Proj2.z;
   
-  yawHandZ = (yawHandZ/600)*90;
+  yawHandZ = (yawHandZ/700)*90;
  pushMatrix();
  float midX = (jointPos_Proj.x + jointPos_Proj2.x)/2;
  float midY = (jointPos_Proj.y + jointPos_Proj2.y)/2;
@@ -328,6 +336,9 @@ rotateZ(radians(-angle));
 
 
   rotateX(radians(hipHandz));       // not sure if it should be inverted
+  
+  
+  
   dy = dy+150;
   dy = (dy/400)*90;
   if (dy > 90)
@@ -851,3 +862,5 @@ void onEndCalibration(int userId, boolean successfull)
     context.startPoseDetection("Psi",userId);
   }
 }
+
+
