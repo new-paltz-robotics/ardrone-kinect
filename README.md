@@ -43,15 +43,15 @@ Instructions to fly
 
 2. As you move your hands around, the controllers will follow your movements. To takeoff you need to change to flight mode by bringing your hands together and then extending them back out again. The controllers will activiate and create a virtual device platform between the controllers (Think of pulling out a sheet of tinfoil) which you will use to control the drone. Be prepared because the drone will immediately takeoff as well!
 
-The Basic controls are intended to be as natural as posssible. If you proactive with the controller before you fly you should get the idea, but the details are as as follows:
+The Basic controls are intended to be as natural as posssible. If you practice with the controller before you fly you should get the idea, but the details are as as follows:
 
 
 * ***TAKEOFF/LAND*** - Bring your hands together to enable and disable the controllers.
 * ***UP/DOWN*** - Raise and lower your arms.
-* **LEFT/RIGHT*** - Raise one arm over the other. Think holding a slinky.
-* **FORWARD/BACK*** - Move your hands forward in front of your body or bring them in close (or even behind).
-* ** TURN LEFT/RIGHT*** - Move one hand out in front of the other.
+* ***LEFT/RIGHT*** - Raise one arm over the other. Think holding a slinky.
+* ***FORWARD/BACK*** - Move your hands forward in front of your body or bring them in close (or even behind).
+* *** TURN LEFT/RIGHT*** - Move one hand out in front of the other.
 * *** "L" Key*** - This is basically an emergency off. It forgets the user and sends the landing command to the drone. To reconnect a new user, you have to hold your hands up again.
 
-We hope others enjoy what we put together or will improve it even more. Special thanks to Adam Simone who did almost all of the work for the controller interface. Also a big thanks to the open source projects that we used for the underlying libraries.
+We hope others enjoy what we put together and will to improve it even more (right now, it's still kinda rough, but functional) . Special thanks to Adam Simone who did almost all of the work for the controller interface. Also a big thanks to the open source projects that we used for the underlying libraries.
 
