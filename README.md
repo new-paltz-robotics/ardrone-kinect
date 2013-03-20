@@ -35,6 +35,8 @@ Things you can test are:
 Instructions to fly
 ====================
 
+VIDEO EXAMPLE: http://www.youtube.com/watch?v=4DDwqv8xScY
+
 1. Review the dependencies and the testing and troubleshooting sections before you do anything.
 
 2. After you've connected to the drone over wifi, and are ready to fly immediatley (sometimes it may just take off), start the sketch...
@@ -50,8 +52,8 @@ The Basic controls are intended to be as natural as posssible. If you practice w
 * ***UP/DOWN*** - Raise and lower your arms.
 * ***LEFT/RIGHT*** - Raise one arm over the other. Think holding a slinky.
 * ***FORWARD/BACK*** - Move your hands forward in front of your body or bring them in close (or even behind).
-* *** TURN LEFT/RIGHT*** - Move one hand out in front of the other.
-* *** "L" Key*** - This is basically an emergency off. It forgets the user and sends the landing command to the drone. To reconnect a new user, you have to hold your hands up again.
+* ***TURN LEFT/RIGHT*** - Move one hand out in front of the other.
+* ***"L" Key*** - This is basically an emergency off. It forgets the user and sends the landing command to the drone. To reconnect a new user, you have to hold your hands up again.
 
 We hope others enjoy what we put together and will to improve it even more (right now, it's still kinda rough, but functional) . Special thanks to Adam Simone who did almost all of the work for the controller interface. Also a big thanks to the open source projects that we used for the underlying libraries.
 
