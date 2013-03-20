@@ -230,9 +230,11 @@ void handDist(int userId)
 
       context.stopTrackingSkeleton(userId); 
       context.startPoseDetection("Psi",userId);
+      ardrone.landing();
   }
   if (key == 'P'){
     //kill command
+    ardrone.landing();
   }
   
 }
@@ -364,20 +366,28 @@ popMatrix();
 // hipHandz = forward (and back)
 // angle = move left (and right)
 
-ARmoveDown = s(0 - dy) //fix direction
-ARmoveLeft = s(angle) //temp set to zero
-ARturnLeft = 0 //temp set to zero
-ARmoveForward = s(hipHandz)
+
 
 // Scales based on 90 deg = 10 
-function s(angle) {
-  return angle / 9;
-}
+//float scl(angle) {
+//  return angle / 9;
+//}
 
-if (togDraw == 1) {
-    ardrone.move3D(ARmoveForward, ARmoveLeft, ARmoveDown, ARturnLeft);
-}
- 
+int ARmoveDown = (int) (0 - dy) / 4; //fix direction
+int ARmoveLeft = (int) (angle) / 6; //temp set to zero
+int ARturnLeft = (int) yawHandZ; //temp set to zero
+int ARmoveForward = (int) (hipHandz) / 1;
+
+  if (togDraw == 1) {
+      ardrone.move3D(ARmoveForward, ARmoveLeft, ARmoveDown, ARturnLeft);
+  }
+} 
+
+
+
+
+
+
 // draw the skeleton with the selected joints
 void drawDrone() {
   int halfwidth = 3;
